@@ -20,7 +20,7 @@ library(ggraph)
 bobross<- read_csv(here("Second Tidy Tuesday","Data", "bob_ross.csv")) # time to laod in the data :)
 glimpse(bobross) 
 View(bobross_data) # see if data works
-select(-contains("src")) %>% # pipe itself so it is easily readable and replicable
+select(-contains("src")) %>% # pipe itself so it is easily readable and replicable, img_Src
   filter(season <= 31) %>% # filter out seasons through 31 and under
   mutate(season = paste("Season", season)) # combine two columns by row into a single cell, wanna change season into Season
 
@@ -32,6 +32,8 @@ bobross_data<-bobross %>%
   filter(value) %>% #filter out all the values that do not correlate to color
   mutate(color = str_replace_all(color, "_", " ")) %>% # want to replace all the different variations of color names into a cohesive manner
   group_by(season) %>% # grouping 10 colors per season
+  
+  count(season, color) %>%
   slice_max(n, n = 10, with_ties = FALSE) %>% #select rows with highest or lowest values of a variable, n =population
   
   ggplot(aes(n, color, fill = season)) + #fill each season with 10 colors
