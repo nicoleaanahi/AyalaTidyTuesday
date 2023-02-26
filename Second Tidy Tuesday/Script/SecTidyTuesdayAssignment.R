@@ -34,7 +34,7 @@ bobross_data<-bobross %>%
   group_by(season) %>% # grouping 10 colors per season
   
   count(season, color) %>%
-  slice_max(n, n = 10, with_ties = FALSE) %>% #select rows with highest or lowest values of a variable, n =population
+  slice_max(n, n = 3, with_ties = FALSE) %>% #select rows with highest or lowest values of a variable, n =population
   
   ggplot(aes(n, color, fill = season)) + #fill each season with 10 colors
   facet_wrap(~season, scales ="free") + #releases both x and y axis
