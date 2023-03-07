@@ -64,27 +64,29 @@ afri <- df %>% select(c(language,positive,negative,neutral)) %>% gather(key = 'k
 
 
 # Function for bar plot
-titlefontsize <- 18
-axistextsize <- 15
-legendtextsize <- 15
+titlefontsize <- 18 # change font size
+axistextsize <- 15 # change text size
+legendtextsize <- 15 # change legend size
 func_ggplot_bar <- function(afri,position,level,plottitle){
-  sentiment <- c('positive','neutral','negative')
-  afri$language <-  afri$language %>% factor(levels = eval(parse(text = level)) %>% rev())
+  sentiment <- c('positive','neutral','negative') # named it sentiment + i saw that this function for ggplot can have pos, level,and plottitle all for the same dataset in one row
+  afri$language <-  afri$language %>% factor(levels = eval(parse(text = level)) %>% rev()) # $ means to extract or subset a specific part of a data object in R
   afri$key <-  afri$key %>% factor(levels = c(sentiment[!sentiment %in% level],sentiment[sentiment %in% level]))
   print( afri$key)
+  
+### TIME TO PLOT ###
   g <- 
-    afri %>% 
-    ggplot(mapping = aes(x = language,y = value,fill = key)) + 
-    geom_bar(position = position, stat="identity") + 
-    coord_flip() + 
-    theme_minimal() + 
-    theme(legend.title = element_blank(),
-          axis.title = element_blank(),
-          axis.text = element_text(size = axistextsize),
-          plot.title = element_text(size = titlefontsize),
-          legend.text = element_text(size = legendtextsize)) +
-    scale_fill_manual(values = c('positive' = 'pink','negative' = 'maroon','neutral' = 'purple')) + 
-    labs(title = plottitle)
+    afri %>% # piping the dataset into ggplot
+    ggplot(mapping = aes(x = language,y = value,fill = key)) + # ggplot w/ mapping, language is x and value is y
+    geom_bar(position = position, stat="identity") + # gives me position of the value as a static
+    coord_flip() + # inverting the x and y 
+    theme_minimal() + # minimal theme
+    theme(legend.title = element_blank(), # want a legend
+          axis.title = element_blank(), # want a title
+          axis.text = element_text(size = axistextsize), # text size is important
+          plot.title = element_text(size = titlefontsize), # title plot must be same fit size
+          legend.text = element_text(size = legendtextsize)) + # legend text size is important
+    scale_fill_manual(values = c('positive' = 'pink','negative' = 'maroon','neutral' = 'purple')) + # colors for my values
+    labs(title = plottitle) # my plot title is my main title for the plot
   return(g)
 }
 
@@ -92,21 +94,22 @@ func_ggplot_bar <- function(afri,position,level,plottitle){
 gg <- list()
 
 gg[[1]] <- 
-  func_ggplot_bar(afri =  afri,position = 'stack',level = 'total',
-                  plottitle = 'Tweet Samples Shown in Descending Order')
+  func_ggplot_bar(afri =  afri,position = 'stack',level = 'total', # stacking the position of my vector for my afri dataset
+                  plottitle = 'Tweet Samples Shown in Descending Order') # OVERVIEW TITLE
 
-  scale_y_continuous(labels = function(x)paste0(x*100,' %'))
+  scale_y_continuous(labels = function(x)paste0(x*100,' %')) # making my y scaled continuous
 
 layout_matrix <- rbind(c(1,1,1),c(2,3,4))
 g <- arrangeGrob(grobs = gg,
-                 ncol = 3,
-                 nrow = 2,
+                 ncol = 3, # 3 columns
+                 nrow = 2, # 2 rows
                  layout_matrix = layout_matrix,
-                 widths = c(1,1,1),
+                 widths = c(1,1,1), 
                  heights = c(1,1),
                  top = textGrob('The Overview of African Language Sentiment\n',
                                 gp=gpar(fontsize = 25))) %>% as_ggplot()
 g
 
-ggsave(here("Third Tidy Tuesday","Output","ThirdTidyTuesdayAssignment.png"))
 
+ggsave(here("Third Tidy Tuesday", "Output", "ThirdTidyTuesdayAssignment.png"))
+            
