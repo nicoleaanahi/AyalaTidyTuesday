@@ -1,0 +1,51 @@
+---
+title: "Fourth Tidy Tuesday"
+author: "Nicole Ayala"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    toc: TRUE
+    toc_float: TRUE
+---
+
+```{r}
+### Load Libraries ###
+library(tidyverse)
+library(here)
+library(tidytuesdayR)
+library(rnaturalearth)
+
+### Load the Data ###
+numbats<- read_csv(here("Fourth Tidy Tuesday","Data", "numbats.csv"))
+glimpse(numbats)
+```
+
+
+```{r}
+
+aus_map<- ne_countries(country = "australia", returnclass = "sf") # I downloaded a map of Australia using the rnaturalearth package
+
+
+
+cities<- data.frame(city = c("Sydney", "Melbourne", "Brisbane", "Perth", "Adelaide"), # choosing  what cities I wanted to find specific lat/long locations for
+                     latitude = c(-33.8688, -37.8136, -27.4698, -31.9535, -34.9285), # given latitude for some Australian cities
+                     longitude = c(151.2093, 144.9631, 153.0251, 115.8605, 138.6007)) # given longitude for some Australian cities
+
+### Time to Plot ###
+ggplot() +
+  geom_sf(data = aus_map, fill = "palegreen4", color = "navy") + # colors for aus map (inside and out)
+  geom_point(data = numbats, aes(x = decimalLongitude, # x is Longitude
+                                 y = decimalLatitude),# y is Latitude
+                                 size =2, color = "black") +
+  annotate("text", x = cities$longitude, y = cities$latitude, label = cities$city, size = 3, color = "orange") +
+  labs(title = "Most Populated Cities where Numbats are Found in Australia ") + # title of map
+  xlab("Latitude") + # x is lat
+  ylab("Longitude") + # y is long
+  theme(axis.line = element_blank(), # keep the standard
+        axis.text.x = element_blank(), # keep the standard
+        axis.text.y = element_blank(), # keeping it the same
+        axis.ticks = element_blank()) + # keeping it the same
+  theme_minimal() # minimal theme light grid
+
+ggsave(here("Fourth Tidy Tuesday","Output","NumbatsPlot(2023-03-08).png"))
+```
