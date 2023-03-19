@@ -78,7 +78,7 @@ filtercats %>%
         plot.subtitle = element_text(hjust = .2,vjust = -1.20, size = 10, color = "#336666"), # changes the color and size of the subtitle
         plot.background = element_rect(fill = 'white', color = 'white')) # just to fill in the background, behind the gridlines
 
-ggsave(here("Sixth Tidy Tuesday","Output","6thTidyTuesdayDrugsPlot.png"),# names and saves ggplot
+ggsave(here("Sixth Tidy Tuesday","Output","6thTidyTuesdayCatsPlot.png"),# names and saves ggplot
        width = 15, height = 10)# adjust size of graph in inches
   
   
