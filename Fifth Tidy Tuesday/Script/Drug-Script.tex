@@ -218,18 +218,24 @@ past 20 years.
   \FunctionTok{labs}\NormalTok{(}
     \AttributeTok{title =} \FunctionTok{str\_wrap}\NormalTok{(}\StringTok{"Analysis of the Various Medications Used in Both Humanitarian and Veterinary Agencies for Parkinson Disease Within Europe"}\NormalTok{,}\DecValTok{2500}\NormalTok{),}\CommentTok{\# just the title}
     \AttributeTok{subtitle =} \FunctionTok{str\_wrap}\NormalTok{ (}\StringTok{"Demonstrates Various Active Substances for Parkinsons"}\NormalTok{,}\DecValTok{150}\NormalTok{),   }\CommentTok{\# subtitle}
-    \AttributeTok{caption =} \StringTok{" NAA|Data: European Drug Development"}\NormalTok{, }\CommentTok{\# caption}
+    \AttributeTok{caption =} \StringTok{" NAA | Data: European Drug Development"}\NormalTok{, }\CommentTok{\# caption}
     \AttributeTok{x =} \StringTok{" Active Substances "}\NormalTok{, }\CommentTok{\# x axis}
     \AttributeTok{y =}\StringTok{"Recurrence of Active Substances"}\NormalTok{, }\CommentTok{\# y axis}
     \AttributeTok{fill =}\StringTok{"active substances"}\NormalTok{) }\SpecialCharTok{+} \CommentTok{\# fill active substances}
+  \FunctionTok{scale\_fill\_brewer}\NormalTok{(}\AttributeTok{palette =} \StringTok{"Pastel1"}\NormalTok{, }\AttributeTok{name =} \StringTok{"species"}\NormalTok{) }\SpecialCharTok{+}   \CommentTok{\# Color scheme for the categories}
   \FunctionTok{coord\_flip}\NormalTok{() }\SpecialCharTok{+} \CommentTok{\# invert the x axis and y axis to read the substances}
   \FunctionTok{scale\_size}\NormalTok{(}\AttributeTok{range =} \FunctionTok{c}\NormalTok{(.}\DecValTok{1}\NormalTok{, .}\DecValTok{2}\NormalTok{)) }\SpecialCharTok{+} \CommentTok{\# small scale}
   \FunctionTok{theme\_light}\NormalTok{() }\SpecialCharTok{+} \CommentTok{\# very light white theme}
-  \FunctionTok{theme}\NormalTok{(}\AttributeTok{plot.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{hjust =}\NormalTok{ .}\DecValTok{2}\NormalTok{,}\AttributeTok{vjust =} \SpecialCharTok{{-}}\FloatTok{1.20}\NormalTok{, }\AttributeTok{size =} \DecValTok{15}\NormalTok{, }\AttributeTok{color =} \StringTok{"seagreen4"}\NormalTok{), }\CommentTok{\# changes the colro and size of the title}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{plot.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{hjust =}\NormalTok{ .}\DecValTok{2}\NormalTok{,}\AttributeTok{vjust =} \SpecialCharTok{{-}}\FloatTok{1.20}\NormalTok{, }\AttributeTok{size =} \DecValTok{15}\NormalTok{, }\AttributeTok{color =} \StringTok{"seagreen4"}\NormalTok{), }\CommentTok{\# changes the color and size of the title}
         \AttributeTok{plot.subtitle =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{hjust =}\NormalTok{ .}\DecValTok{2}\NormalTok{,}\AttributeTok{vjust =} \SpecialCharTok{{-}}\FloatTok{1.20}\NormalTok{, }\AttributeTok{size =} \DecValTok{10}\NormalTok{, }\AttributeTok{color =} \StringTok{"paleturquoise3"}\NormalTok{), }\CommentTok{\# changes the color and size of the subtitle}
         \AttributeTok{plot.background =} \FunctionTok{element\_rect}\NormalTok{(}\AttributeTok{fill =} \StringTok{\textquotesingle{}white\textquotesingle{}}\NormalTok{, }\AttributeTok{color =} \StringTok{\textquotesingle{}white\textquotesingle{}}\NormalTok{)) }\CommentTok{\# just to fill in the background, behind the gridlines}
 \end{Highlighting}
 \end{Shaded}
+
+\begin{verbatim}
+## Warning in RColorBrewer::brewer.pal(n, pal): n too large, allowed maximum for palette Pastel1 is 9
+## Returning the palette you asked for with that many colors
+\end{verbatim}
 
 \includegraphics{../Outputs/unnamed-chunk-3-1.pdf}
 
@@ -239,6 +245,11 @@ past 20 years.
        \AttributeTok{width =} \DecValTok{15}\NormalTok{, }\AttributeTok{height =} \DecValTok{10}\NormalTok{)}\CommentTok{\# adjust size of graph in inches}
 \end{Highlighting}
 \end{Shaded}
+
+\begin{verbatim}
+## Warning in RColorBrewer::brewer.pal(n, pal): n too large, allowed maximum for palette Pastel1 is 9
+## Returning the palette you asked for with that many colors
+\end{verbatim}
 
 ```
 
