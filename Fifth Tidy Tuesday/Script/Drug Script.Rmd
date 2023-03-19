@@ -38,33 +38,33 @@ library(ggplot2)
 
 ### Load the Data ###
 drugs <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-03-14/drugs.csv')
-glimpse(drugs)
+glimpse(drugs) # viewing data
 
 ### cleaning therapeutic areas - selecting only one
- parkinson <- drugs %>% 
+ parkinson <- drugs %>% # looking at cleaning this data
  filter(!is.na(therapeutic_area)) %>%
   count(therapeutic_area, category) %>% # only counting category and therap-areas 
   arrange() %>% # arranges in ascending order
-  filter(str_detect(therapeutic_area, "Parkinson Disease"))
+  filter(str_detect(therapeutic_area, "Parkinson Disease")) #  detecting only parkinsons
  
- medname <- drugs %>% 
-  count(medicine_name) 
+ medname <- drugs %>%  # looking at names
+  count(medicine_name) # count fo each medicine name
    
- activesubst <- drugs %>% 
-  count(active_substance)
+ activesubst <- drugs %>% # looking at substances
+  count(active_substance) # count of each active substance
  
 parkinson_df<-drugs %>% 
-  select(therapeutic_area, active_substance) %>% 
-  mutate(active_substance = str_to_sentence(active_substance))
+  select(therapeutic_area, active_substance) %>% # selecting two factors:active substance and therapeutic data
+  mutate(active_substance = str_to_sentence(active_substance)) # convert to sentence case
 
-parkinson_df<-parkinson_df %>% 
-  group_by(therapeutic_area, active_substance) %>% 
-  mutate(drug_number = row_number()) %>% 
-  ungroup()
+parkinson_df<-parkinson_df %>%  # piping to itself makes it stronger to break
+  group_by(therapeutic_area, active_substance) %>% # grouping therapeutic area and active substance together
+  mutate(drug_number = row_number()) %>% # amount of drugs is correlated to rows
+  ungroup() 
  
 semijoindrug<- drugs %>% 
-  semi_join(activesubst, by = "active_substance") %>% 
-  semi_join(parkinson, by = "therapeutic_area") %>% 
+  semi_join(activesubst, by = "active_substance") %>%  # active substances specific to parkinson within the entire dataset including active susbstances
+  semi_join(parkinson, by = "therapeutic_area") %>% # tried out the semi joining of the therapeutic area and being filtered out to parkinson only
   count(active_substance, therapeutic_area) %>% # wanna see the active substance given per therapeutic area/ disease
   filter(therapeutic_area == "Parkinson Disease") # already filtered out but to be structured I stayed consistent
   
@@ -75,22 +75,22 @@ semijoindrug<- drugs %>%
 ### Plotting Time
   ggplot(data=semijoindrug,
     aes(x = active_substance,     # x axis is the active substance
-        y=n,
+        y=n,  # number of active sub/drugs
         fill =active_substance)) +  #y axis is number of drugs, fill is active substance
-  geom_col() +  
+  geom_col() +  # bar plot
   labs(
     title = str_wrap("Analysis of the Various Medications Used in Both Humanitarian and Veterinary Agencies for Parkinson Disease Within Europe",2500),# just the title
     subtitle = str_wrap ("Demonstrates Various Active Substances for Parkinsons",150),   # subtitle
     caption = " NAA|Data: European Drug Development", # caption
-    x = " Active Substances ",
-    y ="Recurrence of Active Substances",
-    fill ="active substances") +
-  coord_flip() +
-  scale_size(range = c(.1, .2)) +
-  theme_light() +
-  theme(plot.title = element_text(hjust = .2,vjust = -1.20, size = 15, color = "seagreen4"),
-        plot.subtitle = element_text(hjust = .2,vjust = -1.20, size = 10, color = "paleturquoise3"),
-        plot.background = element_rect(fill = 'white', color = 'white'))
+    x = " Active Substances ", # x axis
+    y ="Recurrence of Active Substances", # y axis
+    fill ="active substances") + # fill active substances
+  coord_flip() + # invert the x axis and y axis to read the substances
+  scale_size(range = c(.1, .2)) + # small scale
+  theme_light() + # very light white theme
+  theme(plot.title = element_text(hjust = .2,vjust = -1.20, size = 15, color = "seagreen4"), # changes the colro and size of the title
+        plot.subtitle = element_text(hjust = .2,vjust = -1.20, size = 10, color = "paleturquoise3"), # changes the color and size of the subtitle
+        plot.background = element_rect(fill = 'white', color = 'white')) # just to fill in the background, behind the gridlines
 
 ggsave(here("Fifth Tidy Tuesday","Output","5thTidyTuesdayDrugsPlot.png"),# names and saves ggplot
        width = 15, height = 10)# adjust size of graph in inches

@@ -138,7 +138,7 @@ past 20 years.
 \begin{Highlighting}[]
 \DocumentationTok{\#\#\# Load the Data }\AlertTok{\#\#\#}
 \NormalTok{drugs }\OtherTok{\textless{}{-}}\NormalTok{ readr}\SpecialCharTok{::}\FunctionTok{read\_csv}\NormalTok{(}\StringTok{\textquotesingle{}https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023{-}03{-}14/drugs.csv\textquotesingle{}}\NormalTok{)}
-\FunctionTok{glimpse}\NormalTok{(drugs)}
+\FunctionTok{glimpse}\NormalTok{(drugs) }\CommentTok{\# viewing data}
 \end{Highlighting}
 \end{Shaded}
 
@@ -178,30 +178,30 @@ past 20 years.
 \begin{Shaded}
 \begin{Highlighting}[]
 \DocumentationTok{\#\#\# cleaning therapeutic areas {-} selecting only one}
-\NormalTok{ parkinson }\OtherTok{\textless{}{-}}\NormalTok{ drugs }\SpecialCharTok{\%\textgreater{}\%} 
+\NormalTok{ parkinson }\OtherTok{\textless{}{-}}\NormalTok{ drugs }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# looking at cleaning this data}
  \FunctionTok{filter}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(therapeutic\_area)) }\SpecialCharTok{\%\textgreater{}\%}
   \FunctionTok{count}\NormalTok{(therapeutic\_area, category) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# only counting category and therap{-}areas }
   \FunctionTok{arrange}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# arranges in ascending order}
-  \FunctionTok{filter}\NormalTok{(}\FunctionTok{str\_detect}\NormalTok{(therapeutic\_area, }\StringTok{"Parkinson Disease"}\NormalTok{))}
+  \FunctionTok{filter}\NormalTok{(}\FunctionTok{str\_detect}\NormalTok{(therapeutic\_area, }\StringTok{"Parkinson Disease"}\NormalTok{)) }\CommentTok{\#  detecting only parkinsons}
  
-\NormalTok{ medname }\OtherTok{\textless{}{-}}\NormalTok{ drugs }\SpecialCharTok{\%\textgreater{}\%} 
-  \FunctionTok{count}\NormalTok{(medicine\_name) }
+\NormalTok{ medname }\OtherTok{\textless{}{-}}\NormalTok{ drugs }\SpecialCharTok{\%\textgreater{}\%}  \CommentTok{\# looking at names}
+  \FunctionTok{count}\NormalTok{(medicine\_name) }\CommentTok{\# count fo each medicine name}
    
-\NormalTok{ activesubst }\OtherTok{\textless{}{-}}\NormalTok{ drugs }\SpecialCharTok{\%\textgreater{}\%} 
-  \FunctionTok{count}\NormalTok{(active\_substance)}
+\NormalTok{ activesubst }\OtherTok{\textless{}{-}}\NormalTok{ drugs }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# looking at substances}
+  \FunctionTok{count}\NormalTok{(active\_substance) }\CommentTok{\# count of each active substance}
  
 \NormalTok{parkinson\_df}\OtherTok{\textless{}{-}}\NormalTok{drugs }\SpecialCharTok{\%\textgreater{}\%} 
-  \FunctionTok{select}\NormalTok{(therapeutic\_area, active\_substance) }\SpecialCharTok{\%\textgreater{}\%} 
-  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{active\_substance =} \FunctionTok{str\_to\_sentence}\NormalTok{(active\_substance))}
+  \FunctionTok{select}\NormalTok{(therapeutic\_area, active\_substance) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# selecting two factors:active substance and therapeutic data}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{active\_substance =} \FunctionTok{str\_to\_sentence}\NormalTok{(active\_substance)) }\CommentTok{\# convert to sentence case}
 
-\NormalTok{parkinson\_df}\OtherTok{\textless{}{-}}\NormalTok{parkinson\_df }\SpecialCharTok{\%\textgreater{}\%} 
-  \FunctionTok{group\_by}\NormalTok{(therapeutic\_area, active\_substance) }\SpecialCharTok{\%\textgreater{}\%} 
-  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{drug\_number =} \FunctionTok{row\_number}\NormalTok{()) }\SpecialCharTok{\%\textgreater{}\%} 
-  \FunctionTok{ungroup}\NormalTok{()}
+\NormalTok{parkinson\_df}\OtherTok{\textless{}{-}}\NormalTok{parkinson\_df }\SpecialCharTok{\%\textgreater{}\%}  \CommentTok{\# piping to itself makes it stronger to break}
+  \FunctionTok{group\_by}\NormalTok{(therapeutic\_area, active\_substance) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# grouping therapeutic area and active substance together}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{drug\_number =} \FunctionTok{row\_number}\NormalTok{()) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# amount of drugs is correlated to rows}
+  \FunctionTok{ungroup}\NormalTok{() }
  
 \NormalTok{semijoindrug}\OtherTok{\textless{}{-}}\NormalTok{ drugs }\SpecialCharTok{\%\textgreater{}\%} 
-  \FunctionTok{semi\_join}\NormalTok{(activesubst, }\AttributeTok{by =} \StringTok{"active\_substance"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
-  \FunctionTok{semi\_join}\NormalTok{(parkinson, }\AttributeTok{by =} \StringTok{"therapeutic\_area"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{semi\_join}\NormalTok{(activesubst, }\AttributeTok{by =} \StringTok{"active\_substance"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}  \CommentTok{\# active substances specific to parkinson within the entire dataset including active susbstances}
+  \FunctionTok{semi\_join}\NormalTok{(parkinson, }\AttributeTok{by =} \StringTok{"therapeutic\_area"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# tried out the semi joining of the therapeutic area and being filtered out to parkinson only}
   \FunctionTok{count}\NormalTok{(active\_substance, therapeutic\_area) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# wanna see the active substance given per therapeutic area/ disease}
   \FunctionTok{filter}\NormalTok{(therapeutic\_area }\SpecialCharTok{==} \StringTok{"Parkinson Disease"}\NormalTok{) }\CommentTok{\# already filtered out but to be structured I stayed consistent}
 \end{Highlighting}
@@ -212,22 +212,22 @@ past 20 years.
 \DocumentationTok{\#\#\# Plotting Time}
   \FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data=}\NormalTok{semijoindrug,}
     \FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ active\_substance,     }\CommentTok{\# x axis is the active substance}
-        \AttributeTok{y=}\NormalTok{n,}
+        \AttributeTok{y=}\NormalTok{n,  }\CommentTok{\# number of active sub/drugs}
         \AttributeTok{fill =}\NormalTok{active\_substance)) }\SpecialCharTok{+}  \CommentTok{\#y axis is number of drugs, fill is active substance}
-  \FunctionTok{geom\_col}\NormalTok{() }\SpecialCharTok{+}  
+  \FunctionTok{geom\_col}\NormalTok{() }\SpecialCharTok{+}  \CommentTok{\# bar plot}
   \FunctionTok{labs}\NormalTok{(}
     \AttributeTok{title =} \FunctionTok{str\_wrap}\NormalTok{(}\StringTok{"Analysis of the Various Medications Used in Both Humanitarian and Veterinary Agencies for Parkinson Disease Within Europe"}\NormalTok{,}\DecValTok{2500}\NormalTok{),}\CommentTok{\# just the title}
     \AttributeTok{subtitle =} \FunctionTok{str\_wrap}\NormalTok{ (}\StringTok{"Demonstrates Various Active Substances for Parkinsons"}\NormalTok{,}\DecValTok{150}\NormalTok{),   }\CommentTok{\# subtitle}
     \AttributeTok{caption =} \StringTok{" NAA|Data: European Drug Development"}\NormalTok{, }\CommentTok{\# caption}
-    \AttributeTok{x =} \StringTok{" Active Substances "}\NormalTok{,}
-    \AttributeTok{y =}\StringTok{"Recurrence of Active Substances"}\NormalTok{,}
-    \AttributeTok{fill =}\StringTok{"active substances"}\NormalTok{) }\SpecialCharTok{+}
-  \FunctionTok{coord\_flip}\NormalTok{() }\SpecialCharTok{+}
-  \FunctionTok{scale\_size}\NormalTok{(}\AttributeTok{range =} \FunctionTok{c}\NormalTok{(.}\DecValTok{1}\NormalTok{, .}\DecValTok{2}\NormalTok{)) }\SpecialCharTok{+}
-  \FunctionTok{theme\_light}\NormalTok{() }\SpecialCharTok{+}
-  \FunctionTok{theme}\NormalTok{(}\AttributeTok{plot.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{hjust =}\NormalTok{ .}\DecValTok{2}\NormalTok{,}\AttributeTok{vjust =} \SpecialCharTok{{-}}\FloatTok{1.20}\NormalTok{, }\AttributeTok{size =} \DecValTok{15}\NormalTok{, }\AttributeTok{color =} \StringTok{"seagreen4"}\NormalTok{),}
-        \AttributeTok{plot.subtitle =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{hjust =}\NormalTok{ .}\DecValTok{2}\NormalTok{,}\AttributeTok{vjust =} \SpecialCharTok{{-}}\FloatTok{1.20}\NormalTok{, }\AttributeTok{size =} \DecValTok{10}\NormalTok{, }\AttributeTok{color =} \StringTok{"paleturquoise3"}\NormalTok{),}
-        \AttributeTok{plot.background =} \FunctionTok{element\_rect}\NormalTok{(}\AttributeTok{fill =} \StringTok{\textquotesingle{}white\textquotesingle{}}\NormalTok{, }\AttributeTok{color =} \StringTok{\textquotesingle{}white\textquotesingle{}}\NormalTok{))}
+    \AttributeTok{x =} \StringTok{" Active Substances "}\NormalTok{, }\CommentTok{\# x axis}
+    \AttributeTok{y =}\StringTok{"Recurrence of Active Substances"}\NormalTok{, }\CommentTok{\# y axis}
+    \AttributeTok{fill =}\StringTok{"active substances"}\NormalTok{) }\SpecialCharTok{+} \CommentTok{\# fill active substances}
+  \FunctionTok{coord\_flip}\NormalTok{() }\SpecialCharTok{+} \CommentTok{\# invert the x axis and y axis to read the substances}
+  \FunctionTok{scale\_size}\NormalTok{(}\AttributeTok{range =} \FunctionTok{c}\NormalTok{(.}\DecValTok{1}\NormalTok{, .}\DecValTok{2}\NormalTok{)) }\SpecialCharTok{+} \CommentTok{\# small scale}
+  \FunctionTok{theme\_light}\NormalTok{() }\SpecialCharTok{+} \CommentTok{\# very light white theme}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{plot.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{hjust =}\NormalTok{ .}\DecValTok{2}\NormalTok{,}\AttributeTok{vjust =} \SpecialCharTok{{-}}\FloatTok{1.20}\NormalTok{, }\AttributeTok{size =} \DecValTok{15}\NormalTok{, }\AttributeTok{color =} \StringTok{"seagreen4"}\NormalTok{), }\CommentTok{\# changes the colro and size of the title}
+        \AttributeTok{plot.subtitle =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{hjust =}\NormalTok{ .}\DecValTok{2}\NormalTok{,}\AttributeTok{vjust =} \SpecialCharTok{{-}}\FloatTok{1.20}\NormalTok{, }\AttributeTok{size =} \DecValTok{10}\NormalTok{, }\AttributeTok{color =} \StringTok{"paleturquoise3"}\NormalTok{), }\CommentTok{\# changes the color and size of the subtitle}
+        \AttributeTok{plot.background =} \FunctionTok{element\_rect}\NormalTok{(}\AttributeTok{fill =} \StringTok{\textquotesingle{}white\textquotesingle{}}\NormalTok{, }\AttributeTok{color =} \StringTok{\textquotesingle{}white\textquotesingle{}}\NormalTok{)) }\CommentTok{\# just to fill in the background, behind the gridlines}
 \end{Highlighting}
 \end{Shaded}
 
