@@ -1,0 +1,86 @@
+---
+title: "Cats in the UK"
+author: "Nicole Ayala"
+date: "`r Sys.Date()`"
+output: 
+    html_document:
+      toc: TRUE
+      toc_float: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 6th Tidy Tuesday: This week I will be learning more about what the average age for cats is in the UK when they are neutered.
+
+### Loading Libraries
+```{r}
+### Loading the Libraries ###
+library(tidyverse)
+library(tidytuesdayR)
+library(svglite)
+library(colorspace)
+library(here)
+library(janitor)
+library(ggplot2)
+library(dplyr)
+library(grid)
+
+### Loading in the Data ###
+cats_uk<-read_csv(here("Sixth Tidy Tuesday","Data","cats_uk_reference.csv"))
+
+glimpse(cats_uk)
+View(cats_uk)
+
+```
+### Cleaning the Data
+```{r}
+### Time to Clean the Data ###
+catsdf <- cats_uk %>%
+  select(animal_sex, age_years, animal_reproductive_condition) %>%
+  mutate(.data = cats_uk,
+              after_2 = ifelse(age_years>2, "After 2", "Before 2"))
+           
+filtercats <- catsdf %>%
+  filter(animal_reproductive_condition %in%c("Neutered")) %>%
+  group_by(animal_reproductive_condition, age_years) %>%
+  summarize(cnt = n()) %>%
+  mutate(freq = formattable::percent(cnt / sum(cnt))) %>% 
+  arrange(desc(freq))
+
+  
+
+
+```
+### Filtering the Data & Plotting It
+```{r}
+filtercats %>% 
+  ggplot() +
+  geom_jitter(aes(x = age_years, 
+                  y = animal_reproductive_condition, 
+                  color = age_years),
+              size = 3,
+              alpha = 0.7,
+              width = 0.25,
+              height = 0.45) +
+  labs(
+    title = str_wrap("Analysis of Cats That Have Been Neutered Within the UK", 250), # just the title
+    subtitle = str_wrap ("Shows Both Male and Female Cats Alike that Have Been Neutered", 150), # add subtitle
+    caption = " NAA | Tidy Tuesday | Pets UK Dataset", # caption
+             x = "Age in Years", # x axis
+             y = "Neutered Felines", # y axis
+             fill = "Age in Years") + # fill is AGE IN YEARS  M/F
+  scale_fill_brewer(palette = "Blues") +   # color scheme for the categories
+  coord_flip() + # invert the x axis and y axis to read the ages
+  theme_light() + # very light white theme
+  theme(plot.title = element_text(hjust = .2,vjust = -1.20, size = 13, color = "#6699FF"), # changes the color and size of the title
+        plot.subtitle = element_text(hjust = .2,vjust = -1.20, size = 10, color = "#336666"), # changes the color and size of the subtitle
+        plot.background = element_rect(fill = 'white', color = 'white')) # just to fill in the background, behind the gridlines
+
+ggsave(here("Sixth Tidy Tuesday","Output","6thTidyTuesdayDrugsPlot.png"),# names and saves ggplot
+       width = 15, height = 10)# adjust size of graph in inches
+  
+  
+  
+```
