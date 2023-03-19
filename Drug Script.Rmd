@@ -1,0 +1,105 @@
+---
+title: "drugs"
+author: "Nicole Ayala"
+date: "`r Sys.Date()`"
+output: 
+      htmldocument:
+      toc: TRUE
+      toc_float: TRUE
+      
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      arning = FALSE, 
+                      message=FALSE, 
+                      fig.path = "../Outputs/")
+```
+
+##In this Tidy Tuesday, I will be using a series of packages to create individual linear plots for 4 different types of diseases and see their correlation in how many medications have been authorised for it in the past 20 years.
+
+###Loading the Libraries
+```{r}
+### Load Libraries ###
+library(tidyverse)
+library(here)
+library(tidytuesdayR)
+library(svglite)
+library(tidyr)
+library(dplyr)
+library(beyonce)
+library(ggplot2)
+
+```
+
+### Loading the Data
+
+```{r}
+
+### Load the Data ###
+drugs <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-03-14/drugs.csv')
+glimpse(drugs)
+
+### cleaning therapeutic areas - selecting only one
+ parkinson <- drugs %>% 
+ filter(!is.na(therapeutic_area)) %>%
+  count(therapeutic_area, category) %>% # only counting category and therap-areas 
+  arrange() %>% # arranges in ascending order
+  filter(str_detect(therapeutic_area, "Parkinson Disease"))
+ 
+ medname <- drugs %>% 
+  count(medicine_name) 
+   
+ activesubst <- drugs %>% 
+  count(active_substance)
+ 
+parkinson_df<-drugs %>% 
+  select(therapeutic_area, active_substance) %>% 
+  mutate(active_substance = str_to_sentence(active_substance))
+
+parkinson_df<-parkinson_df %>% 
+  group_by(therapeutic_area, active_substance) %>% 
+  mutate(drug_number = row_number()) %>% 
+  ungroup()
+ 
+semijoindrug<- drugs %>% 
+  semi_join(activesubst, by = "active_substance") %>% 
+  semi_join(parkinson, by = "therapeutic_area") %>% 
+  count(active_substance, therapeutic_area) %>% # wanna see the active substance given per therapeutic area/ disease
+  filter(therapeutic_area == "Parkinson Disease") # already filtered out but to be structured I stayed consistent
+  
+```
+
+```{r}
+
+### Plotting Time
+  ggplot(data=semijoindrug,
+    aes(x = active_substance,     # x axis is the active substance
+        y=n,
+        fill =active_substance)) +  #y axis is number of drugs, fill is active substance
+  geom_col() +  
+  labs(
+    title = str_wrap("Analysis of the Various Medications Used in Both Humanitarian and Veterinary Agencies for Parkinson Disease Within Europe",250),# just the title
+    subtitle = str_wrap ("Demonstrates Various Active Substances for Parkinsons",150),   # subtitle
+    caption = " NAA|Data: European Drug Development", # caption
+    x = " Active Substances ",
+    y ="Recurrence of Active Substances",
+    fill ="active substances") +
+  coord_flip() +
+  scale_size(range = c(.1, .2)) +
+  theme_light() +
+  theme(plot.title = element_text(hjust = .2,vjust = -1.20, size = 25, color = "seagreen4"),
+        plot.subtitle = element_text(hjust = .2,vjust = -1.20, size = 15, color = "paleturquoise3"),
+        plot.background = element_rect(fill = 'white', color = 'white'))
+
+ggsave(here("FifthTidyTuesday","Output","5thTidyTuesdayDrugsPlot.png"),# names and saves ggplot
+       width = 15, height = 10)# adjust size of graph in inches
+```
+
+
+                                 
+   
+
+
+```
+
