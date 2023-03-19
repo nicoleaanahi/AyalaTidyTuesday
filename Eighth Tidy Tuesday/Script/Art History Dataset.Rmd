@@ -1,0 +1,94 @@
+---
+title: "8th Tidy Tuesday"
+author: "Nicole Ayala"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    toc: TRUE
+    toc_float: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      Warning = FALSE, 
+                      message=FALSE, 
+                      fig.path = "../Output/")
+```
+
+### In this Tidy Tuesday, I will be analyzing Ana Mendieta's Art History and seeing what the average ratio of space per page total is for the other artists compared to hers in all editions from the book, Gardner.
+
+## Loading the Libraries and Data
+```{r}
+### Load in the Libraries ###
+library(tidyverse)
+library(tidytuesdayR)
+library(svglite)
+library(colorspace)
+library(here)
+library(geojsonio)
+library(sf)
+library(ggplot2)
+library(broom) 
+library(rgeos)
+library(scico)
+
+### Load in the Data ###
+arthist <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-01-17/artists.csv')
+glimpse(arthist)
+
+### filter the Data ###
+filterart <- arthist %>% 
+  select(edition_number, book, artist_name, space_ratio_per_page_total) %>% # want the specific space per page, artist name, book and edition number
+  group_by(edition_number, book) %>% # grouping edition number and book
+  mutate(avg = mean(space_ratio_per_page_total, na.rm = TRUE)) %>% # finding the average of space per page total
+  filter(artist_name == "Ana Mendieta") %>%  # just wanna see the artist Ana Mendieta's work
+  mutate(delta = space_ratio_per_page_total - avg) %>% # change or difference in average from actual rayio of space per page total
+  pivot_longer(cols = c(space_ratio_per_page_total, avg)) %>% # wanna pivot the cols space ratio per page total and average
+  mutate(name = recode(name, space_ratio_per_page_total = "Mendieta", avg = "Average")) %>% # changed name to Mendieta and average 
+  filter(book == "Gardner") # chose book Gardner
+
+### FIX LABELS ###
+align <- ifelse(filterart$name == "Average", 0, 1)
+```
+## Plotting the Data 
+```{r}
+
+### TIME TO PLOT ###
+filterart %>% 
+  ggplot(aes(y = as.character(edition_number), # y axis
+             x = value)) + # x axis
+  geom_line(aes(group = edition_number),
+            size = 3, # size of lines
+            color = "darkseagreen4") + # color of lines
+  geom_text(aes(label = name), 
+            nudge_y = 0.2, # adjusting y by .3 units
+            size = 2, color = "tan",  # size and color of text
+            hjust = align) + # adjusted prior and named as align for labels
+  scale_x_continuous() + # continuous theme for x
+  theme_minimal() + # minimal theme, light grids
+  theme(plot.title = element_text(size = 15, hjust = 0.5, color = "darkseagreen4"),
+        plot.title.position = "plot", # title adjustments
+        plot.subtitle = element_text( size = 6, hjust = 0.5, lineheight = 1.1, color = "white"),
+        plot.caption.position = "plot", # subtitle adjustments
+        plot.caption = element_text(size = 8, color = "white", hjust = 0.5), # caption adjustments
+        legend.position = "none", # no legend
+        axis.title = element_text(size = 10, color = "white", hjust = 0.5), # title adjustments
+        axis.text = element_text(size = 8, color = "white", hjust = 0.5), # text adjustments
+        panel.grid = element_line(linewidth = 0.35, linetype = "dotted", color = "gold"), # background grid lines
+        plot.margin = unit(c(1.0, 1.0, 1.0, 1.0), "cm"), # margin adjustments
+        plot.background = element_rect(color = "black", fill = "black")) +
+  labs(title = "Ana Mendieta's Work of Art in Every Edition Within the  Gardner Book",
+       subtitle = "The artist, Ana Mendieta, and her pieces depicted in the Gardner Book with every edition accounted for + the average of space ratio per page total for the other artists",
+       x = " Gardner Book Editions\n",
+       y = "\nSpace per Page Ratio",
+       caption = "\nNAA | Tidy Tuesday | Art History Dataset")
+
+### SAVE PLOT ###
+ggsave(here("Eighth Tidy Tuesday","Output","8thTidyTuesdayArtHistoryPlot.png"),# names and saves ggplot
+       width = 20, height = 15)# adjust size of graph in inches
+       
+```
+
+
+
+
