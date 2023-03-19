@@ -13,7 +13,7 @@ output:
 knitr::opts_chunk$set(echo = TRUE,
                       arning = FALSE, 
                       message=FALSE, 
-                      fig.path = "../Outputs/")
+                      fig.path = "../Output/")
 ```
 
 ##In this Tidy Tuesday, I will be using a series of packages to create individual linear plots for 4 different types of diseases and see their correlation in how many medications have been authorised for it in the past 20 years.
@@ -25,6 +25,7 @@ library(tidyverse)
 library(here)
 library(tidytuesdayR)
 library(svglite)
+library(colorspace)
 library(tidyr)
 library(dplyr)
 library(beyonce)
@@ -39,6 +40,8 @@ library(ggplot2)
 ### Load the Data ###
 drugs <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-03-14/drugs.csv')
 glimpse(drugs) # viewing data
+
+q11 <- qualitative_hcl(11, "Dark2") # changing the color name
 
 ### cleaning therapeutic areas - selecting only one
  parkinson <- drugs %>% # looking at cleaning this data
@@ -85,7 +88,7 @@ semijoindrug<- drugs %>%
     x = " Active Substances ", # x axis
     y ="Recurrence of Active Substances", # y axis
     fill ="active substances") + # fill active substances
-  scale_fill_brewer(palette = "Pastel1", name = "species") +   # Color scheme for the categories
+  scale_fill_brewer(palette = "Spectral") +   # Color scheme for the categories
   coord_flip() + # invert the x axis and y axis to read the substances
   scale_size(range = c(.1, .2)) + # small scale
   theme_light() + # very light white theme

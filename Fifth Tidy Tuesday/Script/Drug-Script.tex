@@ -124,6 +124,7 @@ past 20 years.
 \FunctionTok{library}\NormalTok{(here)}
 \FunctionTok{library}\NormalTok{(tidytuesdayR)}
 \FunctionTok{library}\NormalTok{(svglite)}
+\FunctionTok{library}\NormalTok{(colorspace)}
 \FunctionTok{library}\NormalTok{(tidyr)}
 \FunctionTok{library}\NormalTok{(dplyr)}
 \FunctionTok{library}\NormalTok{(beyonce)}
@@ -177,6 +178,8 @@ past 20 years.
 
 \begin{Shaded}
 \begin{Highlighting}[]
+\NormalTok{q11 }\OtherTok{\textless{}{-}} \FunctionTok{qualitative\_hcl}\NormalTok{(}\DecValTok{11}\NormalTok{, }\StringTok{"Dark2"}\NormalTok{) }\CommentTok{\# changing the color name}
+
 \DocumentationTok{\#\#\# cleaning therapeutic areas {-} selecting only one}
 \NormalTok{ parkinson }\OtherTok{\textless{}{-}}\NormalTok{ drugs }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# looking at cleaning this data}
  \FunctionTok{filter}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(therapeutic\_area)) }\SpecialCharTok{\%\textgreater{}\%}
@@ -222,7 +225,7 @@ past 20 years.
     \AttributeTok{x =} \StringTok{" Active Substances "}\NormalTok{, }\CommentTok{\# x axis}
     \AttributeTok{y =}\StringTok{"Recurrence of Active Substances"}\NormalTok{, }\CommentTok{\# y axis}
     \AttributeTok{fill =}\StringTok{"active substances"}\NormalTok{) }\SpecialCharTok{+} \CommentTok{\# fill active substances}
-  \FunctionTok{scale\_fill\_brewer}\NormalTok{(}\AttributeTok{palette =} \StringTok{"Pastel1"}\NormalTok{, }\AttributeTok{name =} \StringTok{"species"}\NormalTok{) }\SpecialCharTok{+}   \CommentTok{\# Color scheme for the categories}
+  \FunctionTok{scale\_fill\_brewer}\NormalTok{(}\AttributeTok{palette =} \StringTok{"Spectral"}\NormalTok{) }\SpecialCharTok{+}   \CommentTok{\# Color scheme for the categories}
   \FunctionTok{coord\_flip}\NormalTok{() }\SpecialCharTok{+} \CommentTok{\# invert the x axis and y axis to read the substances}
   \FunctionTok{scale\_size}\NormalTok{(}\AttributeTok{range =} \FunctionTok{c}\NormalTok{(.}\DecValTok{1}\NormalTok{, .}\DecValTok{2}\NormalTok{)) }\SpecialCharTok{+} \CommentTok{\# small scale}
   \FunctionTok{theme\_light}\NormalTok{() }\SpecialCharTok{+} \CommentTok{\# very light white theme}
@@ -232,12 +235,7 @@ past 20 years.
 \end{Highlighting}
 \end{Shaded}
 
-\begin{verbatim}
-## Warning in RColorBrewer::brewer.pal(n, pal): n too large, allowed maximum for palette Pastel1 is 9
-## Returning the palette you asked for with that many colors
-\end{verbatim}
-
-\includegraphics{../Outputs/unnamed-chunk-3-1.pdf}
+\includegraphics{../Output/unnamed-chunk-3-1.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -245,11 +243,6 @@ past 20 years.
        \AttributeTok{width =} \DecValTok{15}\NormalTok{, }\AttributeTok{height =} \DecValTok{10}\NormalTok{)}\CommentTok{\# adjust size of graph in inches}
 \end{Highlighting}
 \end{Shaded}
-
-\begin{verbatim}
-## Warning in RColorBrewer::brewer.pal(n, pal): n too large, allowed maximum for palette Pastel1 is 9
-## Returning the palette you asked for with that many colors
-\end{verbatim}
 
 ```
 
